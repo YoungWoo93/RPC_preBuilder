@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일\결과물">
+      <UniqueIdentifier>{5e4fb64f-ebe2-4a7c-983a-2bc2ad921f04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\codeMaker">
+      <UniqueIdentifier>{066f7762-8322-4f9b-94f6-5290af45ab56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\codeMaker">
+      <UniqueIdentifier>{41972941-782a-4553-8d53-8bc475aa2601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\parser">
+      <UniqueIdentifier>{6d3ab05e-37b8-41a8-8017-40d1bc1d31af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\parser">
+      <UniqueIdentifier>{b08a67c9-6eee-41f6-ba36-ba8949c3ca5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\codeMaker\cpp">
+      <UniqueIdentifier>{055c3b2c-b432-4706-89e2-2b468f42f033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\codeMaker\cpp">
+      <UniqueIdentifier>{c2005410-28c4-47f1-ad64-219b46f13fb7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RPC_preBuilder.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="scriptParser.cpp">
+      <Filter>소스 파일\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="cppParser.cpp">
+      <Filter>소스 파일\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="codeMaker.cpp">
+      <Filter>소스 파일\codeMaker</Filter>
+    </ClCompile>
+    <ClCompile Include="cppCodeMaker.cpp">
+      <Filter>소스 파일\codeMaker\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cppServerCodeMaker.cpp">
+      <Filter>소스 파일\codeMaker\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cppServerImplementCodeMaker.cpp">
+      <Filter>소스 파일\codeMaker\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cppClientCallbackCodeMaker.cpp">
+      <Filter>소스 파일\codeMaker\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cppClientCodeMaker.cpp">
+      <Filter>소스 파일\codeMaker\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cppRPCServerCodeMaker.cpp">
+      <Filter>소스 파일\codeMaker\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cppRPCClientCodeMaker.cpp">
+      <Filter>소스 파일\codeMaker\cpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="test.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RPC_preBuilder.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="codeMaker.h">
+      <Filter>헤더 파일\codeMaker</Filter>
+    </ClInclude>
+    <ClInclude Include="cshapCodeMaker.h">
+      <Filter>헤더 파일\codeMaker</Filter>
+    </ClInclude>
+    <ClInclude Include="scriptParser.h">
+      <Filter>헤더 파일\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="cppParser.h">
+      <Filter>헤더 파일\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="cppCodeMaker.h">
+      <Filter>헤더 파일\codeMaker\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="cppClientCodeMaker.h">
+      <Filter>헤더 파일\codeMaker\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="cppClientCallbackCodeMaker.h">
+      <Filter>헤더 파일\codeMaker\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="cppServerCodeMaker.h">
+      <Filter>헤더 파일\codeMaker\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="cppServerImplementCodeMaker.h">
+      <Filter>헤더 파일\codeMaker\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="cppRPCClientCodeMaker.h">
+      <Filter>헤더 파일\codeMaker\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="cppRPCServerCodeMaker.h">
+      <Filter>헤더 파일\codeMaker\cpp</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,6 @@
+
+[chatting]
+std::string sendChat(std::string msg)()
+
+[testtest]
+int add(int num1, int num2)(int returnValue)
