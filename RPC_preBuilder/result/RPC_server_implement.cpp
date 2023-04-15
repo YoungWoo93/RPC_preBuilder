@@ -28,12 +28,12 @@ void RPC_implement_table(UINT64 sessionID, serializer& s, serializer& outputs)
 	{
 		case 0 :
 		{
-			std::string ret;
-			std::string msg;
-			s >> msg;
+			bool ret;
+			unsigned int roomID;
+			s >> roomID;
 
 
-			ret = sendChat_implement(sessionID, msg);
+			ret = joinRoom_implement(sessionID, roomID);
 
 			outputs << (short)0 << ret;
 
@@ -42,16 +42,29 @@ void RPC_implement_table(UINT64 sessionID, serializer& s, serializer& outputs)
 
 		case 1 :
 		{
-			int ret;
-			int num1;
-			int num2;
-			s >> num1 >> num2;
+			bool ret;
+			unsigned int roomID;
+			s >> roomID;
 
-			int returnValue;
 
-			ret = add_implement(sessionID, num1, num2, returnValue);
+			ret = leaveRoom_implement(sessionID, roomID);
 
-			outputs << (short)1 << ret << returnValue;
+			outputs << (short)1 << ret;
+
+		}
+		break;
+
+		case 2 :
+		{
+			bool ret;
+			unsigned int roomID;
+			std::string msg;
+			s >> roomID >> msg;
+
+
+			ret = sendChat_implement(sessionID, roomID, msg);
+
+			outputs << (short)2 << ret;
 
 		}
 		break;

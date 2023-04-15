@@ -21,6 +21,8 @@ map<string, string> cppDataTypeMap{
 	{"int64", "long long int"},
 
 	{"unsigned short", "unsigned short"},
+	{"unsigned int", "unsigned int"},
+	{"unsigned long long int", "unsigned long long int"},
 	{"uint", "unsigned int"},
 	{"uint32", "unsigned int"},
 	{"uint64", "unsigned long long int"},
@@ -58,13 +60,25 @@ bool getTypeCpp(string& line, string::iterator& iter, string& type) {
 	while(*iter == ' ' || *iter == '\t')
 		iter++;
 
+	string subType = "";
 	while (iter != line.end()) {
 		if (*iter <= -1 || 256 <= *iter)
 			break;
 		if (*iter == ' ')
-			break;
+		{
+			type += subType;
+			if (subType == "unsigned" || subType == "long" || subType == "static" || subType == "const")
+			{
+				subType.clear();
+				type += ' ';
+				iter++;
+				continue;
+			}
+			else
+				break;
+		}
 
-		type += tolower(*iter);
+		subType += tolower(*iter);
 		iter++;
 	}
 
@@ -125,7 +139,7 @@ bool getBracketBlockCpp(string& line, string::iterator& iter, string& block) {
 	while (iter != line.end()) {
 		if (*iter <= -1 || 256 <= *iter)
 			break;
-		if (isalpha(*iter) || isdigit(*iter) || *iter == '_' || *iter == ' ' || *iter == ',' || *iter == '*' || *iter == '&' || *iter == ':') {
+		if (isalpha(*iter) || isdigit(*iter) || *iter == '_' || *iter == ' ' || *iter == ',' || *iter == '*' || *iter == '&' || *iter == ':' || *iter == '/') {
 
 			block += *iter;
 			iter++;

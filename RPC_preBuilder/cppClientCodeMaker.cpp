@@ -4,13 +4,13 @@
 
 using namespace std;
 
-void cppClientCodeMaker::make(RPCscript& script)
+void cppClientCodeMaker::make(RPCscript& newScript, RPCscript& duplicationScript, RPCscript& removeScript)
 {
-	makeHeader(script);
-	makeCpp(script);
+	makeHeader(newScript, duplicationScript, removeScript);
+	makeCpp(newScript, duplicationScript, removeScript);
 }
 
-void cppClientCodeMaker::makeHeader(RPCscript& script)
+void cppClientCodeMaker::makeHeader(RPCscript& newScript, RPCscript& duplicationScript, RPCscript& removeScript)
 {
 	string fileName = "RPC_client_callback";
 
@@ -18,12 +18,31 @@ void cppClientCodeMaker::makeHeader(RPCscript& script)
 	addPreprocessing("#pragma once");
 	commonInit();
 
-	for (auto RPCf : script) {
+	for (auto RPCf : duplicationScript) {
 		addInclude(include(dir + fileName + "_" + RPCf.second.name + ".h", false));
 	}
+	for (auto RPCf : newScript) {
+		addInclude(include(dir + fileName + "_" + RPCf.second.name + ".h", false));
+	}
+	
 	addInclude(include("RemoteProcedureCall/RemoteProcedureCall/client.h", false));
 
-	for (auto RPCf : script)
+	for (auto RPCf : duplicationScript)
+	{
+		for (auto func : RPCf.second.functions)
+		{
+			//parameter p;
+			//for (auto arg : func.inputArgs) {
+			//	p.push_back(arg);
+			//}
+
+			parameter p(func.inputArgs.begin(), func.inputArgs.end());
+			function f("void", func.functionName, p);
+			addFunction(f);
+		}
+
+	}
+	for (auto RPCf : newScript)
 	{
 		for (auto func : RPCf.second.functions)
 		{
@@ -38,7 +57,7 @@ void cppClientCodeMaker::makeHeader(RPCscript& script)
 		}
 		
 	}
-
+	
 	parameter p;
 	p.push_back(argument("serializer&", "s"));
 	function f("void", "RPC_callback_table", p);
@@ -47,7 +66,7 @@ void cppClientCodeMaker::makeHeader(RPCscript& script)
 	writeHeader(fileName);
 }
 
-void cppClientCodeMaker::makeCpp(RPCscript& script)
+void cppClientCodeMaker::makeCpp(RPCscript& newScript, RPCscript& duplicationScript, RPCscript& removeScript)
 {
 	string fileName = "RPC_client_callback";
 
@@ -55,7 +74,31 @@ void cppClientCodeMaker::makeCpp(RPCscript& script)
 	addInclude(include(dir + fileName + ".h", false));
 	addGlobalVariable(argument("extern RPCclient*", "rpcClient"));
 
-	for (auto RPCf : script)
+	for (auto RPCf : duplicationScript)
+	{
+		for (auto func : RPCf.second.functions)
+		{
+			parameter p(func.inputArgs.begin(), func.inputArgs.end());
+			function f("void", func.functionName, p);
+			f.implement += "{\n";
+			f.implement += "\tpacket sendBuffer;\n";
+			f.implement += "\n";
+			f.implement += "\t*(sendBuffer.buffer) << (short)" + to_string(func.ID);
+			for (auto arg : p) {
+				f.implement += " << ";
+				f.implement += arg.name;
+			}
+			f.implement += ";\n";
+			f.implement += "\tsendBuffer.fillHeader(packetHeader(sendBuffer.buffer->size()));\n";
+			f.implement += "\n";
+			f.implement += "\trpcClient->SendPacket(sendBuffer);\n";
+			f.implement += "}\n";
+			f.implement += "\n";
+			addFunction(f);
+		}
+	}
+
+	for (auto RPCf : newScript)
 	{
 		for (auto func : RPCf.second.functions)
 		{
@@ -88,7 +131,41 @@ void cppClientCodeMaker::makeCpp(RPCscript& script)
 	f.implement += "\n";
 	f.implement += "\tswitch(id)\n";
 	f.implement += "\t{\n";
-	for (auto RPCf : script)
+	for (auto RPCf : duplicationScript)
+	{
+		for (auto func : RPCf.second.functions)
+		{
+			parameter p;
+			f.implement += "\t\tcase " + to_string(func.ID) + " :\n";
+			f.implement += "\t\t{\n";
+			if (func.returnType != "void") {
+				f.implement += "\t\t\t" + func.returnType + " ret;\n";
+				f.implement += "\t\t\ts >> ret;\n";
+			}
+			if (!func.outputArgs.empty()) {
+				for (int i = 0; i < func.outputArgs.size(); i++) {
+					f.implement += "\t\t\t" + func.outputArgs[i].type + " " + func.outputArgs[i].name + ";\n";
+				}
+			}
+
+			f.implement += "\t\t\t" + func.functionName + "_callback(";
+			if (func.returnType != "void") {
+				f.implement += "ret";
+			}
+			if (!func.outputArgs.empty()) {
+				f.implement += ", " + func.outputArgs[0].name;
+				for (int i = 1; i < func.outputArgs.size(); i++) {
+					f.implement += ", " + func.outputArgs[i].name;
+				}
+			}
+			f.implement += ");\n";
+			f.implement += "\t\t}\n";
+			f.implement += "\t\tbreak;\n";
+			f.implement += "\n";
+		}
+	}
+
+	for (auto RPCf : newScript)
 	{
 		for (auto func : RPCf.second.functions)
 		{

@@ -26,7 +26,7 @@ void cppRPCClientCodeMaker::makeHeader()
 	outFile << "#include <map>" << endl;
 	outFile << "class RPCclient : public Network {" << endl;
 	outFile << "public:" << endl;
-	outFile << "\RPCclient();" << endl;
+	outFile << "\tRPCclient();" << endl;
 	outFile << "\t~RPCclient();" << endl;
 	outFile << endl;
 	outFile << "\tbool start(const std::map<std::string, std::pair<std::string, USHORT>>&serverList);" << endl;

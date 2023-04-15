@@ -17,7 +17,19 @@
 
 
 
-void sendChat_callback(std::string ret)
+void joinRoom_callback(bool ret)
+{
+	//구현
+
+}
+
+void leaveRoom_callback(bool ret)
+{
+	//구현
+
+}
+
+void sendChat_callback(bool ret)
 {
 	//구현
 

@@ -132,45 +132,66 @@ void saveScript(const string& _dir, RPCscript& script)
 }
 
 
-void compareScript(RPCscript& pastScript, RPCscript& newScript, RPCscript& adds, RPCscript& removes)
+void compareScript(RPCscript& pastScript, RPCscript& newScript, RPCscript& adds, RPCscript& removes, RPCscript& duplication)
 {
-	RPCscript duplication;
-	RPCfile temp;
+	for (auto file : newScript)
+	{
+		string _name = file.second.name;
+		adds[_name].name = _name;
+		removes[_name].name = _name;
+		duplication[_name].name = _name;
+	}
+	for (auto file : pastScript)
+	{
+		string _name = file.second.name;
+		adds[_name].name = _name;
+		removes[_name].name = _name;
+		duplication[_name].name = _name;
+	}
 
 	for (auto file : pastScript) {
-		temp.functions.clear();
-		temp.name = file.second.name;
 
 		for (auto function : file.second.functions) 
 		{
-			for (auto target : newScript[temp.name].functions) {
-				if (function == target) {
-					temp.functions.push_back(function);
-					goto nextFunction1;
+			bool flag = false;
+			for (auto target : newScript[file.second.name].functions)
+			{ 
+				if (function == target)
+				{
+					flag = true;
+					break;
+					
 				}
 			}
-			removes[temp.name].name = temp.name;
-			removes[temp.name].functions.push_back(function);
-		nextFunction1:;
 
+			if (flag)  // 과거에 존재 & 현재 존재 = 중복 함수 (기 구현 함수)
+			{
+				duplication[file.second.name].functions.push_back(function);
+			}
+			else
+			{
+				removes[file.second.name].functions.push_back(function);
+			}
 		}
-		duplication[temp.name] = temp;
 	}
 
-	for (auto file : newScript) {
-		temp.functions.clear();
-		temp.name = file.second.name;
 
+	RPCfile temp;
+
+	for (auto file : newScript) {
 		for (auto function : file.second.functions)
 		{
-			for (auto target : duplication[temp.name].functions) {
-				if (function == target)
-					goto nextFunction2;
+			bool flag = false;
+			for (auto target : duplication[file.second.name].functions) {
+				if (function == target)	
+				{
+					flag = true;
+					break;
+				}
 			}
-			adds[temp.name].name = temp.name;
-			adds[temp.name].functions.push_back(function);
-		nextFunction2:;
 
+			if(!flag)	// 새 스크립트 존재 & 중복에 비존재 = 완전 쌔 함수
+				adds[file.second.name].functions.push_back(function);
 		}
 	}
 }

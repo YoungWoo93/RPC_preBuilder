@@ -6,7 +6,7 @@
 class cppClientCodeMaker : public cppCodeMakerFile
 {
 public:
-	void make(RPCscript& script);
-	void makeHeader(RPCscript& script);
-	void makeCpp(RPCscript& script);
+	void make(RPCscript& newScript, RPCscript& duplicationScript, RPCscript& removeScript);
+	void makeHeader(RPCscript& newScript, RPCscript& duplicationScript, RPCscript& removeScript);
+	void makeCpp(RPCscript& newScript, RPCscript& duplicationScript, RPCscript& removeScript);
 };

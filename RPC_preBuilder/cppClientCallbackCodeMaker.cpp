@@ -4,21 +4,69 @@
 
 using namespace std;
 
-void cppCallbackCodeMaker::make(RPCfile& info)
+void cppCallbackCodeMaker::make(RPCfile& newFile, RPCfile& duplicationFile, RPCfile& removeFile)
 {
-	makeHeader(info);
-	makeCpp(info);
+
+	makeHeader(newFile, duplicationFile, removeFile);
+	makeCpp(newFile, duplicationFile, removeFile);
 }
 
-void cppCallbackCodeMaker::makeHeader(RPCfile& info)
+void cppCallbackCodeMaker::makeHeader(RPCfile& newFile, RPCfile& duplicationFile, RPCfile& removeFile)
 {
-	string fileName = "RPC_client_callback_" + info.name;
-
 	clear();
-	addPreprocessing("#pragma once");
-	commonInit();
 
-	for (auto RPCf : info.functions)
+	string fileName = "RPC_client_callback_" + newFile.name;
+
+	if (!open(fileName + ".h"))
+	{
+		cout << "open fail " << dir << fileName << ".h" << endl;
+		//return;
+	}
+
+
+	if (preprocessingBlock.empty() && libraryBlock.empty() && includeBlock.empty() && functionsBlock.empty())
+	{
+		// 최초 생성 이므로 기본 양식 넣어줘야함
+		addPreprocessing("#pragma once");
+		commonInit();
+
+		for (auto RPCf : duplicationFile.functions)
+		{
+			parameter p;
+			if (RPCf.returnType != "void")
+				p.push_back(argument(RPCf.returnType, "ret"));
+			for (auto arg : RPCf.outputArgs) {
+				p.push_back(arg);
+			}
+
+			function f("void", RPCf.functionName + "_callback", p);
+			addFunction(f);
+		}
+	}
+	else
+	{
+		for (auto removeFunc : removeFile.functions)
+		{
+			parameter p;
+			if (removeFunc.returnType != "void")
+				p.push_back(argument(removeFunc.returnType, "ret"));
+			for (auto arg : removeFunc.outputArgs) {
+				p.push_back(arg);
+			}
+
+			for (auto &func : functionsBlock)
+			{
+				if (func == function("void", removeFunc.functionName + "_callback", p))
+					func.flag = false;
+			}
+			functionsBlock.erase(
+				remove_if(functionsBlock.begin(), functionsBlock.end(), [](auto& func) { return func.flag == false; }), 
+				functionsBlock.end());
+
+		}
+	}
+
+	for (auto RPCf : newFile.functions)
 	{
 		parameter p;
 		if (RPCf.returnType != "void")
@@ -34,14 +82,15 @@ void cppCallbackCodeMaker::makeHeader(RPCfile& info)
 	writeHeader(fileName);
 }
 
-void cppCallbackCodeMaker::makeCpp(RPCfile& info)
+void cppCallbackCodeMaker::makeCpp(RPCfile& newFile, RPCfile& duplicationFile, RPCfile& removeFile)
 {
-	string fileName = "RPC_client_callback_" + info.name;
-	
 	clear();
-	if (!open(fileName))
+
+	string fileName = "RPC_client_callback_" + newFile.name;
+	
+	if (!open(fileName +".cpp"))
 	{
-		cout << "open fail " << dir << fileName << ".cpp" << endl;
+		cout << "open fail " << dir << fileName + ".cpp" << endl;
 		//return;
 	}
 
@@ -49,13 +98,46 @@ void cppCallbackCodeMaker::makeCpp(RPCfile& info)
 	{
 		// 최초 생성 이므로 기본 양식 넣어줘야함
 		addInclude(include(dir + fileName + ".h", false));
+
+		for (auto RPCf : duplicationFile.functions)
+		{
+			parameter p;
+			if (RPCf.returnType != "void")
+				p.push_back(argument(RPCf.returnType, "ret"));
+			for (auto arg : RPCf.outputArgs) {
+				p.push_back(arg);
+			}
+
+			function f("void", RPCf.functionName + "_callback", p);
+			f.implement = "{\n\t//구현\n\n}\n";
+
+			addFunction(f);
+		}
+	}
+	else
+	{
+		for (auto removeFunc : removeFile.functions)
+		{
+			parameter p;
+			if (removeFunc.returnType != "void")
+				p.push_back(argument(removeFunc.returnType, "ret"));
+			for (auto arg : removeFunc.outputArgs) {
+				p.push_back(arg);
+			}
+
+			for (auto &func : functionsBlock)
+			{
+				if (func == function("void", removeFunc.functionName + "_callback", p))
+					func.flag = false;
+			}
+			functionsBlock.erase(
+				std::remove_if(functionsBlock.begin(), functionsBlock.end(), [](auto& func) { return func.flag == false; }),
+				functionsBlock.end());
+
+		}
 	}
 
-
-	for (auto& f : functionsBlock)
-		f.flag = false;
-
-	for (auto RPCf : info.functions)
+	for (auto RPCf : newFile.functions)
 	{
 		parameter p;
 		if (RPCf.returnType != "void")
@@ -70,13 +152,7 @@ void cppCallbackCodeMaker::makeCpp(RPCfile& info)
 		addFunction(f);
 	}
 
-	for (auto f = functionsBlock.begin(); f != functionsBlock.end(); f++)
-	{
-		if (!f->flag) {
-			f = functionsBlock.erase(f);
-			f--;
-		}
-	}
+	
 
 	writeCpp(fileName);
 }

@@ -25,4 +25,6 @@
 
 
 
-void sendChat_callback(std::string ret);
+void joinRoom_callback(bool ret);
+void leaveRoom_callback(bool ret);
+void sendChat_callback(bool ret);

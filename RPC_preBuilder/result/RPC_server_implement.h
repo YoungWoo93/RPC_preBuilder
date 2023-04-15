@@ -22,7 +22,6 @@
 #include "RemoteProcedureCall/RemoteProcedureCall/RemoteProcedureCall.h"
 #include "E:\블로그\lib\RPC_preBuilder\RPC_preBuilder\RPC_server_implement_chatting.h"
 #include "E:\블로그\lib\RPC_preBuilder\RPC_preBuilder\RPC_server_implement_default.h"
-#include "E:\블로그\lib\RPC_preBuilder\RPC_preBuilder\RPC_server_implement_testtest.h"
 
 //INCLUDE END
 

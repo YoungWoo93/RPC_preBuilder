@@ -99,4 +99,4 @@ struct RPCfunction {
 bool openScript(const string& _dir, RPCscript& script);
 void saveScript(const string& _dir, RPCscript& script);
 
-void compareScript(RPCscript& pastScript, RPCscript& newScript, RPCscript& adds, RPCscript& removes);
+void compareScript(RPCscript& pastScript, RPCscript& newScript, RPCscript& adds, RPCscript& removes, RPCscript& duplication);

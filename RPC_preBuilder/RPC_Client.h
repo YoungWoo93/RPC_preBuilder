@@ -3,7 +3,7 @@
 #include <map>
 class RPCclient : public Network {
 public:
-RPCclient();
+	RPCclient();
 	~RPCclient();
 
 	bool start(const std::map<std::string, std::pair<std::string, USHORT>>&serverList);

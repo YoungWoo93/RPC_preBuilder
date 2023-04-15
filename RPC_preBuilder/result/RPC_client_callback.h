@@ -22,13 +22,13 @@
 #include "RemoteProcedureCall/RemoteProcedureCall/RemoteProcedureCall.h"
 #include "E:\블로그\lib\RPC_preBuilder\RPC_preBuilder\RPC_client_callback_chatting.h"
 #include "E:\블로그\lib\RPC_preBuilder\RPC_preBuilder\RPC_client_callback_default.h"
-#include "E:\블로그\lib\RPC_preBuilder\RPC_preBuilder\RPC_client_callback_testtest.h"
 #include "RemoteProcedureCall/RemoteProcedureCall/client.h"
 
 //INCLUDE END
 
 
 
-void sendChat(std::string msg);
-void add(int num1, int num2);
+void joinRoom(unsigned int roomID);
+void leaveRoom(unsigned int roomID);
+void sendChat(unsigned int roomID, std::string msg);
 void RPC_callback_table(serializer& s);

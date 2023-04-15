@@ -6,7 +6,7 @@
 class cppImplementCodeMaker : public cppCodeMakerFile
 {
 public:
-	void make(RPCfile& info);
-	void makeHeader(RPCfile& info);
-	void makeCpp(RPCfile& info);
+	void make(RPCfile& newFile, RPCfile& duplicationFile, RPCfile& removeFile);
+	void makeHeader(RPCfile& newFile, RPCfile& duplicationFile, RPCfile& removeFile);
+	void makeCpp(RPCfile& newFile, RPCfile& duplicationFile, RPCfile& removeFile);
 };

@@ -50,7 +50,9 @@ void main(int argc, char* argv[])
 
 	RPCscript addScript;
 	RPCscript removeScript;
-	compareScript(oldScript, newScript, addScript, removeScript);
+	RPCscript remainingScript;
+	RPCscript duplicationScript;
+	compareScript(oldScript, newScript, addScript, removeScript, duplicationScript);
 
 
 	cppCodeMakerFile CM(dir);
@@ -58,18 +60,18 @@ void main(int argc, char* argv[])
 	{
 		string name = file.first;
 
-		((cppCallbackCodeMaker*)&CM)->make(newScript[name]);
+		((cppCallbackCodeMaker*)&CM)->make(addScript[name], duplicationScript[name], removeScript[name]);
 
 	}
-	((cppClientCodeMaker*)&CM)->make(newScript);
+	((cppClientCodeMaker*)&CM)->make(addScript, duplicationScript, removeScript);
 	for (auto file : newScript)
 	{
 		string name = file.first;
 
-		((cppImplementCodeMaker*)&CM)->make(newScript[name]);
+		((cppImplementCodeMaker*)&CM)->make(addScript[name], duplicationScript[name], removeScript[name]);
 
 	}
-	((cppServerCodeMaker*)&CM)->make(newScript);
+	((cppServerCodeMaker*)&CM)->make(addScript, duplicationScript, removeScript);
 	((cppRPCServerCodeMaker*)&CM)->make();
 	((cppRPCClientCodeMaker*)&CM)->make();
 	saveScript("RPCdata.data", newScript);

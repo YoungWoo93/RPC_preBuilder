@@ -1,6 +1,5 @@
 
 [chatting]
-std::string sendChat(std::string msg)()
-
-[testtest]
-int add(int num1, int num2)(int returnValue)
+bool joinRoom(unsigned int roomID)()
+bool leaveRoom(unsigned int roomID)()
+bool sendChat(unsigned int roomID, std::string msg)()

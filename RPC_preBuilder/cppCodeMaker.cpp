@@ -14,10 +14,18 @@ bool cppCodeMakerFile::open(const string& _fileName)
 {
 	clear();
 
-	inFile.open(dir + _fileName + ".cpp");
+	inFile.open(dir + _fileName);
 
 	if (!inFile.is_open())
 		return false;
+
+	//string line;
+	//while (getline(inFile, line))
+	//{
+	//	cout << line << endl;
+	//}
+
+
 
 	parsingPreprocessing();
 	parsingLibrary();
@@ -271,6 +279,16 @@ void cppCodeMakerFile::parsingFunction()
 				for (auto arg : args){
 					f.args.push_back(argument(arg.first, arg.second));
 				}
+
+				if (*iter == ';')
+				{
+					functionsBlock.push_back(f);
+					f.returnType.clear();
+					f.functionName.clear();
+					f.args.clear();
+					f.implement.clear();
+					continue;
+				}
 			}
 
 			if (line.find('{') != string::npos) {
@@ -287,7 +305,6 @@ void cppCodeMakerFile::parsingFunction()
 
 				f.implement += "\n";
 			}
-
 		} while (bracketCount == 0 && getline(inFile, line));
 
 		while (bracketCount != 0 && getline(inFile, line))
@@ -684,14 +701,10 @@ void makeServerRPCheader_implementFunction(ofstream& serverFile, vector<RPCfunct
 
 		string temp;
 
-		if (!f.inputArgs.empty())
-			temp += "/*IN*/";
 		for (auto p : f.inputArgs) {
 			temp += p.type + " " + p.name + ", ";
 		}
 
-		if (!f.outputArgs.empty())
-			temp += "/*OUT*/";
 		for (auto p : f.outputArgs) {
 			temp += p.type + "& " + p.name + ", ";
 		}

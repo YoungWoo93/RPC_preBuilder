@@ -26,4 +26,6 @@
 extern RPCclient* rpcClient;
 
 
-std::string sendChat_implement(UINT64 sessionID, /*IN*/std::string msg);
+bool joinRoom_implement(unsigned long long int sessionID, unsigned int roomID);
+bool leaveRoom_implement(unsigned long long int sessionID, unsigned int roomID);
+bool sendChat_implement(unsigned long long int sessionID, unsigned int roomID, std::string msg);

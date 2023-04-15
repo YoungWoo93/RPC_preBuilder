@@ -18,22 +18,33 @@
 extern RPCclient* rpcClient;
 
 
-void sendChat(std::string msg)
+void joinRoom(unsigned int roomID)
 {
 	packet sendBuffer;
 
-	*(sendBuffer.buffer) << (short)0 << msg;
+	*(sendBuffer.buffer) << (short)0 << roomID;
 	sendBuffer.fillHeader(packetHeader(sendBuffer.buffer->size()));
 
 	rpcClient->SendPacket(sendBuffer);
 }
 
 
-void add(int num1, int num2)
+void leaveRoom(unsigned int roomID)
 {
 	packet sendBuffer;
 
-	*(sendBuffer.buffer) << (short)1 << num1 << num2;
+	*(sendBuffer.buffer) << (short)1 << roomID;
+	sendBuffer.fillHeader(packetHeader(sendBuffer.buffer->size()));
+
+	rpcClient->SendPacket(sendBuffer);
+}
+
+
+void sendChat(unsigned int roomID, std::string msg)
+{
+	packet sendBuffer;
+
+	*(sendBuffer.buffer) << (short)2 << roomID << msg;
 	sendBuffer.fillHeader(packetHeader(sendBuffer.buffer->size()));
 
 	rpcClient->SendPacket(sendBuffer);
@@ -49,18 +60,25 @@ void RPC_callback_table(serializer& s)
 	{
 		case 0 :
 		{
-			std::string ret;
+			bool ret;
 			s >> ret;
-			sendChat_callback(ret);
+			joinRoom_callback(ret);
 		}
 		break;
 
 		case 1 :
 		{
-			int ret;
+			bool ret;
 			s >> ret;
-			int returnValue;
-			add_callback(ret, returnValue);
+			leaveRoom_callback(ret);
+		}
+		break;
+
+		case 2 :
+		{
+			bool ret;
+			s >> ret;
+			sendChat_callback(ret);
 		}
 		break;
 
